@@ -8,18 +8,23 @@ const router = new Router({
   routes: [
     {
       path: "/",
-      component: () => import("@/components/Main.vue"),
+      component: () => import("@/view/Main.vue"),
       meta: { title: "Projector" },
     },
     {
       path: "/login",
-      component: () => import("@/components/LogIn.vue"),
+      component: () => import("@/view/LogIn.vue"),
       meta: { title: "Log In" },
     },
     {
       path: "/signup",
-      component: () => import("@/components/SignUp.vue"),
+      component: () => import("@/view/SignUp.vue"),
       meta: { title: "Sign Up" },
+    },
+    {
+      path: "/user/profile",
+      component: () => import("@/view/Profile.vue"),
+      meta: { title: "Profile" },
     },
   ],
 });

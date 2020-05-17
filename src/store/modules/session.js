@@ -13,7 +13,7 @@ export default {
         .then((res) => {
           if (res.ok) {
             res.json().then((body) => {
-              ctx.commit("updateLogin", body);
+              ctx.commit("updateUser", body);
               if (data.redirect) data.redirect.push("/");
             });
           } else {
@@ -24,6 +24,7 @@ export default {
           console.log(err);
         });
     },
+
     async signup(ctx, data) {
       fetch(`http://${process.env.VUE_APP_API_HOST}/api/auth/signup`, {
         method: "POST",
@@ -38,7 +39,7 @@ export default {
           if (res.ok) {
             res.json().then((body) => {
               console.log(body);
-              ctx.commit("updateLogin", body);
+              ctx.commit("updateUser", body);
               if (data.redirect) data.redirect.push("/");
             });
           } else {
@@ -49,8 +50,8 @@ export default {
           console.log(err);
         });
     },
+
     async auth(ctx) {
-      console.log("auth");
       fetch(`http://${process.env.VUE_APP_API_HOST}/api/auth/`, {
         method: "POST",
         credentials: "include",
@@ -59,7 +60,7 @@ export default {
         .then((res) => {
           if (res.ok) {
             res.json().then((body) => {
-              ctx.commit("updateLogin", body);
+              ctx.commit("updateUser", body);
             });
           }
         })
@@ -67,15 +68,44 @@ export default {
           console.log(err);
         });
     },
+
+    async logout(ctx) {
+      fetch(`http://${process.env.VUE_APP_API_HOST}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+        mode: "cors",
+      })
+        .then((res) => {
+          if (!res.ok)
+            res.json().then((error) => {
+              ctx.dispatch("throwError", error);
+            });
+          else ctx.commit("logout");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   mutations: {
-    updateLogin(state, data) {
+    updateUser(state, data) {
       state.user.auth = true;
       for (let property in data.user) {
         state.user[property] = data.user[property];
       }
       state.refreshTokenExpireIn = data.refreshTokenExpireIn;
       state.accessTokenExpireIn = data.accessTokenExpireIn;
+    },
+    logout(state) {
+      state.user.auth = false;
+      state.refreshTokenExpireIn = "";
+      state.accessTokenExpireIn = "";
+
+      state.user.firstName = "";
+      state.user.surname = "";
+      state.user.middleName = "";
+      state.user.email = "";
+      state.user.photoLink = "";
     },
   },
   state: {
@@ -99,6 +129,12 @@ export default {
     },
     userShortName(state) {
       return `${state.user.firstName[0]}${state.user.surname[0]}`;
+    },
+    getImage(state) {
+      return state.user.photoLink;
+    },
+    getEmail(state) {
+      return state.user.email;
     },
   },
 };
