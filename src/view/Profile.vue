@@ -1,6 +1,7 @@
 <template lang="pug">
   div
-    div.container.shadow-lg.px-4.py-1(v-if="isUserAuth")
+    NavBar/
+    .container.shadow-lg.mt-5.px-4.py-1.rounded(v-if="isUserAuth")
       b-row.mt-md-5
         b-col.d-flex.d-md-block.justify-content-center(
           xl="3" lg="4" md="6" sm="12")
@@ -28,21 +29,35 @@
         
       b-row
         b-col.d-flex.justify-content-end
-          b-button.mb-3(variant="outline-danger" @click="logout") Log Out
+          b-button.mb-3.mr-2(variant="outline-primary" @click="openEdit") Edit
+          b-button.mb-3(variant="outline-danger" @click="logoutAction") Log Out
 
-    div(v-else)
-      p Need auth
+    div.mt-3(v-else)
+      NoAuth/
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import NavBar from "../components/NavBar.vue";
+import NoAuth from "../components/NoAuth.vue";
+
 export default {
   name: "Profile",
   computed: {
     ...mapGetters(["userFullName", "getImage", "getEmail", "isUserAuth"])
   },
   methods: {
-    ...mapActions(["logout"])
+    ...mapActions(["logout"]),
+    logoutAction() {
+      this.logout(this.$router);
+    },
+    openEdit() {
+      this.$router.push("/user/profile/edit");
+    }
+  },
+  components: {
+    NavBar,
+    NoAuth
   }
 };
 </script>

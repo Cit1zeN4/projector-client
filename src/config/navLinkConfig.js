@@ -1,2 +1,2 @@
 import Link from "@/script/Link";
-export default [new Link("Main", "/")];
+export default [new Link("Projects", "/projects")];

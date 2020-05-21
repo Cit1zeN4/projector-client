@@ -1,6 +1,6 @@
 export default {
   actions: {
-    async login(ctx, data) {
+    login(ctx, data) {
       fetch(`http://${process.env.VUE_APP_API_HOST}/api/auth/login`, {
         method: "POST",
         credentials: "include",
@@ -15,6 +15,7 @@ export default {
             res.json().then((body) => {
               ctx.commit("updateUser", body);
               if (data.redirect) data.redirect.push("/");
+              //console.log(body);
             });
           } else {
             res.json().then((error) => ctx.dispatch("throwError", error));
@@ -25,7 +26,7 @@ export default {
         });
     },
 
-    async signup(ctx, data) {
+    signup(ctx, data) {
       fetch(`http://${process.env.VUE_APP_API_HOST}/api/auth/signup`, {
         method: "POST",
         credentials: "include",
@@ -51,7 +52,7 @@ export default {
         });
     },
 
-    async auth(ctx) {
+    auth(ctx) {
       fetch(`http://${process.env.VUE_APP_API_HOST}/api/auth/`, {
         method: "POST",
         credentials: "include",
@@ -61,6 +62,7 @@ export default {
           if (res.ok) {
             res.json().then((body) => {
               ctx.commit("updateUser", body);
+              console.log(body);
             });
           }
         })
@@ -69,7 +71,7 @@ export default {
         });
     },
 
-    async logout(ctx) {
+    logout(ctx, redirect) {
       fetch(`http://${process.env.VUE_APP_API_HOST}/api/auth/logout`, {
         method: "POST",
         credentials: "include",
@@ -80,11 +82,37 @@ export default {
             res.json().then((error) => {
               ctx.dispatch("throwError", error);
             });
-          else ctx.commit("logout");
+          else {
+            redirect.push("/");
+            ctx.commit("logout");
+          }
         })
         .catch((err) => {
           console.log(err);
         });
+    },
+
+    updateUserInfo(ctx, data) {
+      fetch(`http://${process.env.VUE_APP_API_HOST}/api/users/${data.userId}`, {
+        method: "PUT",
+        credentials: "include",
+        mode: "cors",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(data.form),
+      }).then((res) => {
+        if (res.ok) {
+          res.json().then((body) => {
+            ctx.commit("updateUser", body);
+            if (data.redirect) data.redirect.push("/user/profile");
+          });
+        } else {
+          res.json().then((error) => {
+            ctx.dispatch("throwError", error);
+          });
+        }
+      });
     },
   },
   mutations: {
@@ -93,24 +121,30 @@ export default {
       for (let property in data.user) {
         state.user[property] = data.user[property];
       }
+
+      state.user.photoLink =
+        data.user.photoLink === null
+          ? `http://${process.env.VUE_APP_API_HOST}/public/files/img/profile.png`
+          : data.user.photoLink;
+
       state.refreshTokenExpireIn = data.refreshTokenExpireIn;
       state.accessTokenExpireIn = data.accessTokenExpireIn;
     },
+
     logout(state) {
       state.user.auth = false;
       state.refreshTokenExpireIn = "";
       state.accessTokenExpireIn = "";
 
-      state.user.firstName = "";
-      state.user.surname = "";
-      state.user.middleName = "";
-      state.user.email = "";
-      state.user.photoLink = "";
+      for (let property in state.user) {
+        state.user[property] = "";
+      }
     },
   },
   state: {
     user: {
       auth: false,
+      id: "",
       firstName: "",
       surname: "",
       middleName: "",
@@ -135,6 +169,17 @@ export default {
     },
     getEmail(state) {
       return state.user.email;
+    },
+    getUserId(state) {
+      return state.user.id;
+    },
+    getUserForm(state) {
+      return {
+        firstName: state.user.firstName,
+        surname: state.user.surname,
+        middleName: state.user.middleName,
+        photoLink: state.user.photoLink,
+      };
     },
   },
 };

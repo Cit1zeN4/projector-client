@@ -4,13 +4,13 @@
       toggleable="lg" type="dark" 
       variant="dark")
 
-      b-navbar-brand(href="#") Projector
+      b-navbar-brand(to="/") Projector
       NavLinks.ml-auto(navbar)/
       b-nav-toggle(target="sidebar-1")
 
     b-sidebar.d-lg-none( 
       id="sidebar-1" bg-variant="dark" 
-      text-variant="light" right shadow)
+      text-variant="light" right shadow backdrop)
       
       .px-4: NavLinks/
 </template>
@@ -21,8 +21,8 @@ import NavLinks from "@/components/NavLinks.vue";
 export default {
   name: "NavBar",
   components: {
-    NavLinks,
-  },
+    NavLinks
+  }
 };
 </script>
 

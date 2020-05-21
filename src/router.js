@@ -26,6 +26,16 @@ const router = new Router({
       component: () => import("@/view/Profile.vue"),
       meta: { title: "Profile" },
     },
+    {
+      path: "/user/profile/edit",
+      component: () => import("@/view/ProfileEdit.vue"),
+      meta: { title: "Edit" },
+    },
+    {
+      path: "/projects",
+      component: () => import("@/view/ProjectList.vue"),
+      meta: { title: "Projects" },
+    },
   ],
 });
 

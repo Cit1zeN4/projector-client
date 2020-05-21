@@ -73,7 +73,11 @@ export default {
     ...mapActions(["signup", "throwError"]),
     onSubmit() {
       if (this.confim === this.form.password)
-        this.signup({ form: this.form, redirect: this.$router });
+        this.signup({
+          form: this.form,
+          redirect: this.$router,
+          userId: this.$state.user.id
+        });
       else this.throwError(new Error("Passwords are not equal"));
     }
   }
