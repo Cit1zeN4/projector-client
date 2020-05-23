@@ -15,7 +15,6 @@ export default {
             res.json().then((body) => {
               ctx.commit("updateUser", body);
               if (data.redirect) data.redirect.push("/");
-              //console.log(body);
             });
           } else {
             res.json().then((error) => ctx.dispatch("throwError", error));
@@ -57,18 +56,20 @@ export default {
         method: "POST",
         credentials: "include",
         mode: "cors",
-      })
-        .then((res) => {
-          if (res.ok) {
-            res.json().then((body) => {
-              ctx.commit("updateUser", body);
-              console.log(body);
-            });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      }).then((res) => {
+        if (res.ok) {
+          res.json().then((body) => {
+            ctx.commit("updateUser", body);
+          });
+          setTimeout(() => {
+            ctx.dispatch("auth");
+          }, ctx.state.accessTokenExpireIn - 120000);
+        } else {
+          res.json().then((error) => {
+            ctx.dispatch("throwError", error);
+          });
+        }
+      });
     },
 
     logout(ctx, redirect) {
@@ -134,7 +135,7 @@ export default {
     logout(state) {
       state.user.auth = false;
       state.refreshTokenExpireIn = "";
-      state.accessTokenExpireIn = "";
+      state.accessTokenExpireIn = 900000;
 
       for (let property in state.user) {
         state.user[property] = "";
@@ -150,9 +151,10 @@ export default {
       middleName: "",
       email: "",
       photoLink: "",
+      role: "",
     },
     refreshTokenExpireIn: "",
-    accessTokenExpireIn: "",
+    accessTokenExpireIn: 900000,
   },
   getters: {
     isUserAuth(state) {
@@ -180,6 +182,9 @@ export default {
         middleName: state.user.middleName,
         photoLink: state.user.photoLink,
       };
+    },
+    getUserRole(state) {
+      return state.user.role;
     },
   },
 };
