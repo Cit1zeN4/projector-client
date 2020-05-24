@@ -52,7 +52,7 @@ export default {
 
 <style scoped>
 .bg-img {
-  background-image: url("../assets/alvaro-reyes-qWwpHwip31M-unsplash.jpg");
+  background-image: url("../../public/img/alvaro-reyes-qWwpHwip31M-unsplash.jpg");
 
   /* Full height */
   height: 100vh;
