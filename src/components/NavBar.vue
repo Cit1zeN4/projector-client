@@ -12,7 +12,11 @@
       id="sidebar-1" bg-variant="dark" 
       text-variant="light" right shadow backdrop)
       
-      .px-4: NavLinks/
+      .px-4 
+        NavLinks/
+
+        slot(name="sidebar-x-content")
+
 </template>
 
 <script>
@@ -30,4 +34,5 @@ export default {
 .b-avatar {
   cursor: pointer;
 }
+
 </style>
