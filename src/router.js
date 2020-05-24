@@ -36,6 +36,12 @@ const router = new Router({
       component: () => import("@/view/ProjectList.vue"),
       meta: { title: "Projects" },
     },
+    {
+      path: "/projects/:id",
+      component: () => import("@/view/Project.vue"),
+      meta: { title: "Project" },
+      props: true,
+    },
   ],
 });
 
