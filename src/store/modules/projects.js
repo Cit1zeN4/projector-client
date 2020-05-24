@@ -21,7 +21,6 @@ export default {
         }
       });
     },
-
     fetchProjects(ctx) {
       ctx.commit("clearProjects");
       fetch(`http://${process.env.VUE_APP_API_HOST}/api/project/`, {
@@ -39,7 +38,6 @@ export default {
           });
       });
     },
-
     fetchProjectById(ctx, id) {
       fetch(`http://${process.env.VUE_APP_API_HOST}/api/project/${id}`, {
         method: "GET",
@@ -56,6 +54,21 @@ export default {
           });
       });
     },
+    deleteProjectById(ctx, data) {
+      fetch(`http://${process.env.VUE_APP_API_HOST}/api/project/${data.id}`, {
+        method: "DELETE",
+        credentials: "include",
+        mode: "cors",
+      }).then((res) => {
+        if (res.ok) {
+          ctx.commit("deleteProject", data.id);
+          data.redirect.push("/projects");
+        } else
+          res.json().then((error) => {
+            ctx.dispatch("throwError", error);
+          });
+      });
+    },
   },
   mutations: {
     addProject(state, data) {
@@ -67,6 +80,14 @@ export default {
     },
     setCurrentProject(state, data) {
       state.currentProject = data;
+    },
+    deleteProject(state, id) {
+      const removeIndex = state.projects
+        .map(function(item) {
+          return item.id;
+        })
+        .indexOf(id);
+      state.projects.splice(removeIndex, 1);
     },
   },
   getters: {

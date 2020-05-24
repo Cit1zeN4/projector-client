@@ -41,6 +41,23 @@ const router = new Router({
       component: () => import("@/view/Project.vue"),
       meta: { title: "Project" },
       props: true,
+      children: [
+        {
+          path: "",
+          component: () => import("@/components/AboutProject"),
+          meta: { title: "Project" },
+        },
+        {
+          path: "files",
+          component: () => import("@/components/ProjectFiles"),
+          meta: { title: "Files" },
+        },
+        {
+          path: "people",
+          component: () => import("@/components/ProjectPeople"),
+          meta: { title: "People" },
+        },
+      ],
     },
   ],
 });

@@ -5,19 +5,19 @@
         div
           h5.my-3.text-right Project
           b-navbar-nav
-            b-nav-item.text-right About Project
-            b-nav-item.text-right Files
-            b-nav-item.text-right People
-            b-nav-item.mt-3.text-right(v-b-toggle.sprints-sidebar) Sprints
+            b-nav-item.text-right(:to="`/projects/${id}`") About Project
+            b-nav-item.text-right(:to="`/projects/${id}/files`") Files
+            b-nav-item.text-right(:to="`/projects/${id}/people`") People
+            b-nav-item.text-right(v-b-toggle.sprints-sidebar) Sprints
             b-collapse#sprints-sidebar
               b-nav-item.pr-2.text-right Sprint #1
 
     .d-flex
       .left-sidebar.d-none.d-lg-flex.flex-column.p-4.shadow   
         b-list-group
-          b-list-group-item About Project
-          b-list-group-item Files
-          b-list-group-item People
+          router-link.list-group-item(:to="`/projects/${id}`") About Project
+          router-link.list-group-item(:to="`/projects/${id}/files`") Files
+          router-link.list-group-item(:to="`/projects/${id}/people`") People
         b-button.mt-3(v-b-toggle.sprints variant="outline-primary") Sprints
         b-collapse#sprints
           b-list-group.mt-3
@@ -43,10 +43,7 @@ export default {
     ...mapGetters(["getCurrentProject"])
   },
   methods: {
-    ...mapActions(["fetchProjectById"]),
-    publicPath(path){
-      return `${process.env.VUE_APP_BASE_URL}${path}`
-    }
+    ...mapActions(["fetchProjectById"])
   },
   mounted() {
     this.fetchProjectById(this.id);
@@ -67,11 +64,5 @@ export default {
   max-width: 100%;
   min-width: auto;
   flex: 6;
-}
-
-.content #header-img {
-  height: 170px;
-  width: 100%;
-  object-fit: cover;
 }
 </style>
