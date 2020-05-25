@@ -47,10 +47,23 @@ export default {
         if (res.ok)
           res.json().then((body) => {
             ctx.commit("setCurrentProject", body);
+            ctx.dispatch("fetchManagerById", body.managerId);
           });
         else
           res.json().then((error) => {
             ctx.dispatch("throwError", error);
+          });
+      });
+    },
+    fetchManagerById(ctx, managerId) {
+      fetch(`http://${process.env.VUE_APP_API_HOST}/api/users/${managerId}`, {
+        method: "GET",
+        credentials: "include",
+        mode: "cors",
+      }).then((res) => {
+        if (res.ok)
+          res.json().then((body) => {
+            ctx.commit("addManagerData", body);
           });
       });
     },
@@ -89,6 +102,12 @@ export default {
         .indexOf(id);
       state.projects.splice(removeIndex, 1);
     },
+    clearCurrentProject(state) {
+      state.currentProject = {};
+    },
+    addManagerData(state, data) {
+      state.currentProjectManger = data;
+    },
   },
   getters: {
     getAllProjects(state) {
@@ -97,9 +116,13 @@ export default {
     getCurrentProject(state) {
       return state.currentProject;
     },
+    getCurrentProjectManager(state) {
+      return state.currentProjectManger;
+    },
   },
   state: {
     projects: [],
     currentProject: {},
+    currentProjectManger: {},
   },
 };

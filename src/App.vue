@@ -20,7 +20,9 @@
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "App",
-  computed: { ...mapGetters(["getError", "userFullName"]) },
+  computed: {
+    ...mapGetters(["getError", "userFullName"])
+  },
   methods: { ...mapActions(["closeError", "auth"]) },
   mounted() {
     this.auth();
@@ -31,5 +33,6 @@ export default {
 <style scoped>
 .alert {
   z-index: 99;
+  border-radius: 0px;
 }
 </style>

@@ -10,13 +10,21 @@
           v-model="form.projectName"
         )
 
-      b-form-group#input-groupe-2(
+      b-form-group#input-group-2(
         label="Description"
         label-for="input-2"
       )
         b-form-textarea#input-2(
           placeholder="Enter description"
           row="4" v-model="form.projectDescription"
+        )
+
+      b-form-group#input-group-3(
+        label="Due Date"
+        label-for="input-3"
+      )
+        b-form-datepicker#input-3(
+          v-model="form.dueDate"
         )
 
       div.d-flex.justify-content-center
@@ -30,6 +38,7 @@ export default {
   methods: {
     ...mapActions(["createProject"]),
     createNewProject() {
+      console.log(this.form);
       this.createProject({ form: this.form });
       this.$bvModal.hide("create-project-modal");
       this.form.projectName = "";
@@ -39,12 +48,16 @@ export default {
   computed: {
     ...mapGetters(["getUserId"])
   },
+  mounted() {
+    this.form.managerId = this.getUserId;
+  },
   data() {
     return {
       form: {
         projectName: "",
         projectDescription: "",
-        managerId: this.getUserId
+        dueDate: "",
+        managerId: null
       }
     };
   }

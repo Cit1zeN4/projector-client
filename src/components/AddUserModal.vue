@@ -22,7 +22,7 @@ export default {
     ...mapActions(["fetchUsers"]),
     userFullName(user) {
       return `${user.firstName}
-      ${user.middleName !== "" ? " " + user.middleName : ""} 
+      ${user.middleName || ""} 
       ${user.surname}`;
     }
   },

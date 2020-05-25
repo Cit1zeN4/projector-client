@@ -2,8 +2,8 @@
   div
     img#header-img(:src="publicPath('img/markus-winkler-Q2J2qQsoYH8-unsplash.jpg')")
     h1.mt-4 {{getCurrentProject.projectName}}        
-    p.mt-3 {{getCurrentProject.projectName}}
-    p time
+    p.mt-3 {{getCurrentProject.projectDescription}}
+    p {{'Due Date ' + this.getDate()}}
     .d-flex.justify-content-center
       b-button(v-b-modal.delete-model variant="outline-danger") Delete Project
     
@@ -17,6 +17,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import parseDate from "../script/readableDate";
 
 export default {
   name: "AboutProject",
@@ -30,6 +31,9 @@ export default {
         redirect: this.$router,
         id: this.getCurrentProject.id
       });
+    },
+    getDate() {
+      return parseDate(this.getCurrentProject.dueDate);
     },
     publicPath(path) {
       return `${process.env.VUE_APP_BASE_URL}${path}`;

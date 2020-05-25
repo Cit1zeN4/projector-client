@@ -29,7 +29,7 @@
 <script>
 import NavBar from "../components/NavBar.vue";
 import CreateProjectModal from "../components/CraeteProjectModal";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "ProjectList",
@@ -42,6 +42,7 @@ export default {
   },
   methods: {
     ...mapActions(["fetchProjects"]),
+    ...mapMutations(["clearCurrentProject"]),
     checkRole(role, ...accessRole) {
       return accessRole.some(r => r === role);
     },
@@ -51,6 +52,7 @@ export default {
   },
   mounted() {
     this.fetchProjects();
+    this.clearCurrentProject();
   }
 };
 </script>

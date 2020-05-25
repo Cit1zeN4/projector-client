@@ -5,16 +5,16 @@
         div
           b-icon-plus-square.mr-2
           span Add
-
-    h4.mt-4 Projec Manager
+    
+    h4.mt-4 Project Manager    
     b-list-group.mt-4
       b-list-group-item
         .d-flex
-          div
-            img.rounded
+          div 
+            img.rounded(:src="this.getCurrentProjectManager.photoLink")
           div.w-100.px-4
-            h3.my-0 Name
-            p.my-0 Roles
+            h3.my-0 {{this.userFullName(this.getCurrentProjectManager)}}
+            p.my-0 PM
 
     AddUserModal/
 
@@ -22,11 +22,30 @@
 
 <script>
 import AddUserModal from "./AddUserModal";
+import { mapGetters } from "vuex";
 
 export default {
   name: "ProjectPeople",
   components: {
     AddUserModal
+  },
+  computed: {
+    ...mapGetters(["getCurrentProject", "getCurrentProjectManager"])
+  },
+  methods: {
+    userFullName(user) {
+      return `${user.firstName}
+      ${user.middleName || ""} 
+      ${user.surname}`;
+    }
+  },
+  beforeCreate() {
+    this.manager = this.getCurrentProjectManager;
+  },
+  data() {
+    return {
+      manager: {}
+    };
   }
 };
 </script>

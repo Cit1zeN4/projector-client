@@ -15,6 +15,9 @@ export default new Vuex.Store({
         message: err.message,
       };
       ctx.commit("setError", data);
+      setTimeout(() => {
+        ctx.commit("cleanError");
+      }, 4000);
     },
     closeError(ctx) {
       ctx.commit("cleanError");
