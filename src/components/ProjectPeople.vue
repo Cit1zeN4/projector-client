@@ -34,7 +34,7 @@
 
     AddUserModal/
 
-    b-modal#delete-user-model(title="Deleting user" hide-footer @hide="clearUserForAction()")
+    b-modal#delete-user-model(ref="delete-user-model" title="Deleting user" hide-footer @hide="clearUserForAction()")
       p#my-4 
         | Are you sure that you want to delete {{userForAction.firstName}} from project? 
       .d-flex.justify-content-center
@@ -78,7 +78,7 @@ export default {
         userId: this.userForAction.id
       });
       this.deleteUserFromProject(this.userForAction.id);
-      console.log("done");
+      this.$refs["delete-user-model"].hide();
     }
   },
   data() {
