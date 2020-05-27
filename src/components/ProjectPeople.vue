@@ -44,7 +44,7 @@
 
 <script>
 import AddUserModal from "./AddUserModal";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "ProjectPeople",
@@ -60,6 +60,7 @@ export default {
   },
   methods: {
     ...mapActions(["deleteProjectUser"]),
+    ...mapMutations(["deleteUserFromProject"]),
     userFullName(user) {
       return `${user.firstName}
       ${user.middleName || ""} 
@@ -76,6 +77,8 @@ export default {
         projectId: this.getCurrentProject.id,
         userId: this.userForAction.id
       });
+      this.deleteUserFromProject(this.userForAction.id);
+      console.log("done");
     }
   },
   data() {

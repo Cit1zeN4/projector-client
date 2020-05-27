@@ -178,7 +178,7 @@ export default {
           return item.id;
         })
         .indexOf(userId);
-      state.projects.splice(removeIndex, 1);
+      state.currentProjectUsers.splice(removeIndex, 1);
     },
   },
   getters: {
