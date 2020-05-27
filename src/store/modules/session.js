@@ -124,9 +124,8 @@ export default {
       }
 
       state.user.photoLink =
-        data.user.photoLink === null
-          ? `http://${process.env.VUE_APP_API_HOST}/public/files/img/profile.png`
-          : data.user.photoLink;
+        data.user.photoLink ||
+        `http://${process.env.VUE_APP_API_HOST}/public/files/img/profile.png`;
 
       state.refreshTokenExpireIn = data.refreshTokenExpireIn;
       state.accessTokenExpireIn = data.accessTokenExpireIn;

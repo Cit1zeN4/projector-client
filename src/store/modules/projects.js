@@ -138,6 +138,32 @@ export default {
           res.json().then((body) => {
             ctx.commit("deleteUserFromProject", body);
           });
+        else
+          res.json().then((error) => {
+            ctx.dispatch("throwError", error);
+          });
+      });
+    },
+    updateUserProjectRole(ctx, data) {
+      fetch(
+        `http://${process.env.VUE_APP_API_HOST}/api/project/${data.projectId}/users/${data.userId}`,
+        {
+          method: "PUT",
+          credentials: "include",
+          mode: "cors",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({ role: data.role }),
+        }
+      ).then((res) => {
+        if (res.ok)
+          res.json().then((body) => {
+            ctx.commit("updateUserRole", body);
+          });
+        res.json().then((error) => {
+          ctx.dispatch("throwError", error);
+        });
       });
     },
   },
@@ -179,6 +205,12 @@ export default {
         })
         .indexOf(userId);
       state.currentProjectUsers.splice(removeIndex, 1);
+    },
+    updateUserRole(state, data) {
+      const updateIndex = state.currentProjectUsers
+        .map((item) => item.id)
+        .indexOf(data.userId);
+      state.currentProjectUsers[updateIndex].user_project.role = data.role;
     },
   },
   getters: {

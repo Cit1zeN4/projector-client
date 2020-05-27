@@ -12,7 +12,7 @@
         | Are you sure you really want to delete the project? 
         | If you click Delete, you will not be able to undo this action.
       .d-flex.justify-content-center
-        b-button(variant="danger" @click="") Delete
+        b-button(variant="danger" @click="deleteProject()") Delete
 </template>
 
 <script>
