@@ -7,7 +7,7 @@
             img.rounded(:src="user.photoLink")
           div.d-flex.justify-content-between.align-items-center.w-100.pl-3
             h5.my-0 {{userFullName(user)}}
-            b-icon-plus-square#size-20(@click.prevent)
+            b-icon-plus-square#size-20(@click.prevent="addUser(user)")
 </template>
 
 <script>
@@ -16,14 +16,20 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   name: "AddUserModal",
   computed: {
-    ...mapGetters(["getUsers"])
+    ...mapGetters(["getUsers", "getCurrentProject"])
   },
   methods: {
-    ...mapActions(["fetchUsers"]),
+    ...mapActions(["fetchUsers", "createProjectUser"]),
     userFullName(user) {
       return `${user.firstName}
       ${user.middleName || ""} 
       ${user.surname}`;
+    },
+    addUser(user) {
+      this.createProjectUser({
+        projectId: this.getCurrentProject.id,
+        userId: user.id
+      });
     }
   },
   mounted() {
@@ -36,6 +42,7 @@ export default {
 img {
   width: 35px;
   height: 35px;
+  object-fit: cover;
 }
 
 #size-20 {
