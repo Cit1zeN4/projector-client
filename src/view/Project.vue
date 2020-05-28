@@ -8,6 +8,7 @@
             b-nav-item.text-right(:to="`/projects/${id}`") About Project
             b-nav-item.text-right(:to="`/projects/${id}/files`") Files
             b-nav-item.text-right(:to="`/projects/${id}/people`") People
+            b-nav-item.text-right(:to="`/projects/${id}/tasks`") Tasks
             b-nav-item.text-right(v-b-toggle.sprints-sidebar) Sprints
             b-collapse#sprints-sidebar
               b-nav-item.pr-2.text-right Sprint #1
@@ -18,6 +19,7 @@
           router-link.list-group-item(:to="`/projects/${id}`") About Project
           router-link.list-group-item(:to="`/projects/${id}/files`") Files
           router-link.list-group-item(:to="`/projects/${id}/people`") People
+          router-link.list-group-item(:to="`/projects/${id}/tasks`") Tasks
         b-button.mt-3(v-b-toggle.sprints variant="outline-primary") Sprints
         b-collapse#sprints
           b-list-group.mt-3

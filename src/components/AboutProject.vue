@@ -4,8 +4,10 @@
     h1.mt-4 {{getCurrentProject.projectName}}        
     p.mt-3 {{getCurrentProject.projectDescription}}
     p {{'Due Date ' + this.getDate()}}
+
     .d-flex.justify-content-center
-      b-button(v-b-modal.delete-model variant="outline-danger") Delete Project
+      b-button(v-b-modal.delete-model variant="outline-danger" 
+        v-if="checkRole(getUserRole, 'manager', 'admin')") Delete Project
     
     b-modal#delete-model(title="Deleting project" hide-footer)
       p#my-4 
@@ -22,10 +24,13 @@ import parseDate from "../script/readableDate";
 export default {
   name: "AboutProject",
   computed: {
-    ...mapGetters(["getCurrentProject"])
+    ...mapGetters(["getCurrentProject", "getUserRole"])
   },
   methods: {
     ...mapActions(["deleteProjectById"]),
+    checkRole(role, ...accessRole) {
+      return accessRole.some(r => r === role);
+    },
     deleteProject() {
       this.deleteProjectById({
         redirect: this.$router,

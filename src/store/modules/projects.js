@@ -88,6 +88,7 @@ export default {
       });
     },
     fetchProjectUsers(ctx, projectId) {
+      ctx.dispatch("clearProjectUsers");
       fetch(
         `http://${process.env.VUE_APP_API_HOST}/api/project/${projectId}/users`,
         {
@@ -211,6 +212,9 @@ export default {
         .map((item) => item.id)
         .indexOf(data.userId);
       state.currentProjectUsers[updateIndex].user_project.role = data.role;
+    },
+    clearProjectUsers(state) {
+      state.currentProjectUsers = [];
     },
   },
   getters: {
