@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import session from "./modules/session";
 import projects from "./modules/projects";
 import users from "./modules/users";
+import tasks from "./modules/tasks";
 
 Vue.use(Vuex);
 
@@ -45,5 +46,5 @@ export default new Vuex.Store({
       return state;
     },
   },
-  modules: { session, projects, users },
+  modules: { session, projects, users, tasks },
 });

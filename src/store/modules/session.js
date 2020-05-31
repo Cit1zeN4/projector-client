@@ -16,6 +16,9 @@ export default {
               ctx.commit("updateUser", body);
               if (data.redirect) data.redirect.push("/");
             });
+            setTimeout(() => {
+              ctx.dispatch("auth");
+            }, ctx.state.accessTokenExpireIn - 120000);
           } else {
             res.json().then((error) => ctx.dispatch("throwError", error));
           }
@@ -42,6 +45,9 @@ export default {
               ctx.commit("updateUser", body);
               if (data.redirect) data.redirect.push("/");
             });
+            setTimeout(() => {
+              ctx.dispatch("auth");
+            }, ctx.state.accessTokenExpireIn - 120000);
           } else {
             res.json().then((error) => ctx.dispatch("throwError", error));
           }

@@ -57,6 +57,11 @@ const router = new Router({
           component: () => import("@/components/ProjectPeople"),
           meta: { title: "People" },
         },
+        {
+          path: "tasks",
+          component: () => import("@/components/ProjectTasks"),
+          meta: { title: "Tasks" },
+        },
       ],
     },
   ],

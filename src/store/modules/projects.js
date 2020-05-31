@@ -49,6 +49,7 @@ export default {
             ctx.commit("setCurrentProject", body);
             ctx.dispatch("fetchManagerById", body.managerId);
             ctx.dispatch("fetchProjectUsers", body.id);
+            ctx.dispatch("fetchCurrentProjectTasks", body.id);
           });
         else
           res.json().then((error) => {
@@ -88,7 +89,7 @@ export default {
       });
     },
     fetchProjectUsers(ctx, projectId) {
-      ctx.dispatch("clearProjectUsers");
+      ctx.commit("clearProjectUsers");
       fetch(
         `http://${process.env.VUE_APP_API_HOST}/api/project/${projectId}/users`,
         {
@@ -167,6 +168,94 @@ export default {
         });
       });
     },
+    fetchCurrentProjectTasks(ctx, projectId) {
+      ctx.commit("clearProjectTasks");
+      fetch(
+        `http://${process.env.VUE_APP_API_HOST}/api/task/project/${projectId}`,
+        {
+          method: "GET",
+          credentials: "include",
+          mode: "cors",
+        }
+      ).then((res) => {
+        if (res.ok)
+          res.json().then((body) => {
+            ctx.commit("addTaskProject", body);
+          });
+        else
+          res.json().then((error) => {
+            ctx.dispatch("throwError", error);
+          });
+      });
+    },
+    addTaskColumn(ctx, data) {
+      fetch(
+        `http://${process.env.VUE_APP_API_HOST}/api/task/project/${data.projectId}/column`,
+        {
+          method: "POST",
+          credentials: "include",
+          mode: "cors",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data.form),
+        }
+      ).then((res) => {
+        if (res.ok)
+          res.json().then((body) => {
+            if (!body.tasks) body.tasks = [];
+            ctx.commit("addTaskProject", body);
+          });
+      });
+    },
+    deleteTaskColumn(ctx, data) {
+      fetch(
+        `http://${process.env.VUE_APP_API_HOST}/api/task/project/${data.projectId}/column/${data.columnId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          mode: "cors",
+        }
+      ).then((res) => {
+        if (res.ok) ctx.commit("deleteColumn", data.columnId);
+      });
+    },
+    addTask(ctx, task) {
+      fetch(`http://${process.env.VUE_APP_API_HOST}/api/task/`, {
+        method: "POST",
+        credentials: "include",
+        mode: "cors",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(task),
+      }).then((res) => {
+        if (res.ok)
+          res.json().then((body) => {
+            ctx.commit("addTaskToColumn", body.task);
+          });
+        else
+          res.json().then((error) => {
+            ctx.dispatch("throwError", error);
+          });
+      });
+    },
+    deleteTask(ctx, taskId) {
+      fetch(`http://${process.env.VUE_APP_API_HOST}/api/task/${taskId}`, {
+        method: "DELETE",
+        credentials: "include",
+        mode: "cors",
+      }).then((res) => {
+        if (res.ok)
+          res.json().then(() => {
+            ctx.commit("deleteTaskFromColumn", taskId);
+          });
+        else
+          res.json().then((error) => {
+            ctx.dispatch("throwError", error);
+          });
+      });
+    },
   },
   mutations: {
     addProject(state, data) {
@@ -216,6 +305,38 @@ export default {
     clearProjectUsers(state) {
       state.currentProjectUsers = [];
     },
+    addTaskProject(state, data) {
+      if (data instanceof Array) state.currentProjectTasks.push(...data);
+      else state.currentProjectTasks.push(data);
+    },
+    clearProjectTasks(state) {
+      state.currentProjectTasks = [];
+    },
+    deleteColumn(state, columnId) {
+      const removeIndex = state.currentProjectTasks
+        .map((item) => {
+          return item.id;
+        })
+        .indexOf(columnId);
+      state.currentProjectTasks.splice(removeIndex, 1);
+    },
+    addTaskToColumn(state, task) {
+      console.log("It works");
+      state.currentProjectTasks.forEach((column) => {
+        if (column.id === task.taskColumnId) {
+          console.log(column);
+          column.tasks.push(task);
+        }
+      });
+    },
+    deleteTaskFromColumn(state, taskId) {
+      state.currentProjectTasks.forEach((column, cIndex) => {
+        column.tasks.forEach((task, tIndex) => {
+          if (task.id === taskId)
+            state.currentProjectTasks[cIndex].tasks.splice(tIndex, 1);
+        });
+      });
+    },
   },
   getters: {
     getAllProjects(state) {
@@ -230,11 +351,15 @@ export default {
     getCurrentProjectUsers(state) {
       return state.currentProjectUsers;
     },
+    getCurrentProjectTasks(state) {
+      return state.currentProjectTasks;
+    },
   },
   state: {
     projects: [],
     currentProject: {},
     currentProjectManger: {},
     currentProjectUsers: [],
+    currentProjectTasks: [],
   },
 };
