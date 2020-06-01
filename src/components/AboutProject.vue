@@ -1,9 +1,10 @@
 <template lang="pug">
   div
     img#header-img(:src="publicPath('img/markus-winkler-Q2J2qQsoYH8-unsplash.jpg')")
-    h1.mt-4 {{getCurrentProject.projectName}}        
-    p.mt-3 {{getCurrentProject.projectDescription}}
-    p {{'Due Date ' + this.getDate()}}
+    h1.mt-4 {{getCurrentProject.projectName}}
+    hr        
+    VueMarkdown.mt-2(:source="getCurrentProject.projectDescription === null ? selectedTask.taskContent = 'Prject description' : getCurrentProject.projectDescription")
+    p.mt-3 {{'Due Date ' + this.getDate()}}
 
     .d-flex.justify-content-center
       b-button(v-b-modal.delete-model variant="outline-danger" 
@@ -32,11 +33,15 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import parseDate from "../script/readableDate";
+import VueMarkdown from "vue-markdown";
 
 export default {
   name: "AboutProject",
   computed: {
     ...mapGetters(["getCurrentProject", "getUserRole"])
+  },
+  components: {
+    VueMarkdown
   },
   methods: {
     ...mapActions(["deleteProjectById", "updateProjectById"]),
@@ -61,7 +66,15 @@ export default {
         form: this.getCurrentProject
       });
       this.$refs["edit-modal"].hide();
+    },
+    setBefor(val) {
+      this.beforeEdit = val;
     }
+  },
+  data() {
+    return {
+      beforeEdit: {}
+    };
   }
 };
 </script>

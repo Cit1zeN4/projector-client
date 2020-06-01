@@ -36,7 +36,7 @@
         h4.mb-0.pr-4 {{selectedTask.taskName}}
         b-button(@click="openEdit()" variant="outline-primary") Edit
 
-      h4: b-badge(variant="primary") {{'Sprint ' + selectedTask.sprint}}
+      h4(v-if="selectedTask.sprint"): b-badge(variant="primary") {{'Sprint ' + selectedTask.sprint}}
 
       .d-flex.align-items-center(v-if="selectedTask.startDate && selectedTask.endDate")
         div
@@ -45,6 +45,12 @@
         div.ml-3
           h6 {{selectedTask.startDate}}
           h6 {{selectedTask.endDate}}
+
+      div(v-if="selectedTask.user")
+        label.mt-2 Task user:
+        .d-flex        
+          b-img#small(:src="selectedTask.user ? selectedTask.user.photoLink : ''") 
+          p.ml-2 {{selectedTask.user ? selectedTask.user.firstName : ''}}
 
       VueMarkdown.mt-2(:source="selectedTask.taskContent === null ? selectedTask.taskContent = 'Task Content' : selectedTask.taskContent")
 
@@ -72,17 +78,20 @@
           label="Sprint:"
           label-for=""          
         )
-          b-form-input(
-            type="number"
-            placeholder="Enter task name"
+          b-form-spinbutton(
+            min="0"
             v-model="selectedTask.sprint"
           )
+        
+        label Task user
+        b-form-select(v-model="selectedTask.userId" 
+          :options="getCurrentProjectUsersSelect")
 
-          label.mt-3(for="start-date") Start date
-          b-form-datepicker#start-date(v-model="selectedTask.startDate")
+        label.mt-3(for="start-date") Start date
+        b-form-datepicker#start-date(v-model="selectedTask.startDate")
           
-          label.mt-3(for="end-date") End date
-          b-form-datepicker#end-date(v-model="selectedTask.endDate")
+        label.mt-3(for="end-date") End date
+        b-form-datepicker#end-date(v-model="selectedTask.endDate")
 
         b-form-group.mt-3(
           label="Task content:"
@@ -124,17 +133,20 @@
           label="Sprint:"
           label-for=""          
         )
-          b-form-input(
-            type="number"
-            placeholder="Enter task name"
+          b-form-spinbutton(
+            min="0"
             v-model="newTask.sprint"
           )
 
-          label.mt-3(for="start-date") Start date
-          b-form-datepicker#start-date(v-model="newTask.startDate")
+        label Task user
+        b-form-select(v-model="newTask.userId" 
+          :options="getCurrentProjectUsersSelect")
+
+        label.mt-3(for="start-date") Start date
+        b-form-datepicker#start-date(v-model="newTask.startDate")
           
-          label.mt-3(for="end-date") End date
-          b-form-datepicker#end-date(v-model="newTask.endDate")
+        label.mt-3(for="end-date") End date
+        b-form-datepicker#end-date(v-model="newTask.endDate")
 
         b-form-group.mt-3(
           label="Task content:"
@@ -187,11 +199,13 @@ export default {
       this.$refs["update-task-modal"].show();
     },
     submitUpdate() {
+      this.selectedTask.user = this.getCurrentProjectUsers.find(
+        u => u.id === this.selectedTask.userId
+      );
       this.updateTask({
         taskId: this.selectedTask.id,
         form: this.selectedTask
       });
-
       this.$refs["update-task-modal"].hide();
       this.$refs["task-modal"].show();
     },
@@ -224,7 +238,6 @@ export default {
     },
     submitAdd() {
       this.newTask.ownerId = this.getUser.id;
-      console.log(this.newTask);
       this.addTask(this.newTask);
       this.newTask = {};
       this.$refs["add-task-modal"].hide();
@@ -232,20 +245,32 @@ export default {
     deleteTaskAction() {
       this.deleteTask(this.selectedTask.id);
       this.$refs["task-modal"].hide();
+    },
+    getTaskUser(id) {
+      return this.getCurrentProjectUsers.find(u => u.id === id);
     }
   },
   computed: {
-    ...mapGetters(["getCurrentProjectTasks", "getCurrentProject", "getUser"])
+    ...mapGetters([
+      "getCurrentProjectTasks",
+      "getCurrentProject",
+      "getCurrentProjectUsers",
+      "getCurrentProjectUsersSelect",
+      "getUser"
+    ])
   },
   data() {
     return {
       ev: {},
       selectedTask: {
-        owner: {}
+        owner: {},
+        user: {}
       },
       newColumn: "",
       deletingColumn: {},
-      newTask: {}
+      newTask: {
+        userId: null
+      }
     };
   }
 };

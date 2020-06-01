@@ -179,9 +179,10 @@ export default {
           res.json().then((body) => {
             ctx.commit("updateUserRole", body);
           });
-        res.json().then((error) => {
-          ctx.dispatch("throwError", error);
-        });
+        else
+          res.json().then((error) => {
+            ctx.dispatch("throwError", error);
+          });
       });
     },
     fetchCurrentProjectTasks(ctx, projectId) {
@@ -337,10 +338,8 @@ export default {
       state.currentProjectTasks.splice(removeIndex, 1);
     },
     addTaskToColumn(state, task) {
-      console.log("It works");
       state.currentProjectTasks.forEach((column) => {
         if (column.id === task.taskColumnId) {
-          console.log(column);
           column.tasks.push(task);
         }
       });
@@ -369,6 +368,13 @@ export default {
     },
     getCurrentProjectTasks(state) {
       return state.currentProjectTasks;
+    },
+    getCurrentProjectUsersSelect(state) {
+      return [{ value: null, text: "No user" }].concat(
+        state.currentProjectUsers.map((u) => {
+          return { value: u.id, text: u.firstName };
+        })
+      );
     },
   },
   state: {
