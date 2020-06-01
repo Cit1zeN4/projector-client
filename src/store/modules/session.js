@@ -162,6 +162,9 @@ export default {
     accessTokenExpireIn: 900000,
   },
   getters: {
+    getUser(state) {
+      return state.user;
+    },
     isUserAuth(state) {
       return state.user.auth;
     },

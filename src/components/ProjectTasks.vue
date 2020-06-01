@@ -36,6 +36,8 @@
         h4.mb-0.pr-4 {{selectedTask.taskName}}
         b-button(@click="openEdit()" variant="outline-primary") Edit
 
+      h4: b-badge(variant="primary") {{'Sprint ' + selectedTask.sprint}}
+
       .d-flex.align-items-center(v-if="selectedTask.startDate && selectedTask.endDate")
         div
           h6 Start date
@@ -46,6 +48,11 @@
 
       VueMarkdown.mt-2(:source="selectedTask.taskContent === null ? selectedTask.taskContent = 'Task Content' : selectedTask.taskContent")
 
+      p.mb-1 Owner:
+      .d-flex
+        b-img#small(:src="selectedTask.owner.photoLink") 
+        p.ml-2 {{selectedTask.owner.firstName}}
+      
       .d-flex.justify-content-center
         b-button(variant="outline-danger" @click="deleteTaskAction") Delete
 
@@ -216,6 +223,8 @@ export default {
       this.newTask.taskColumnId = columnId;
     },
     submitAdd() {
+      this.newTask.ownerId = this.getUser.id;
+      console.log(this.newTask);
       this.addTask(this.newTask);
       this.newTask = {};
       this.$refs["add-task-modal"].hide();
@@ -226,12 +235,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getCurrentProjectTasks", "getCurrentProject"])
+    ...mapGetters(["getCurrentProjectTasks", "getCurrentProject", "getUser"])
   },
   data() {
     return {
       ev: {},
-      selectedTask: {},
+      selectedTask: {
+        owner: {}
+      },
       newColumn: "",
       deletingColumn: {},
       newTask: {}
@@ -254,6 +265,13 @@ export default {
 
 #pointer {
   cursor: pointer;
+}
+
+#small {
+  height: 25px;
+  width: 25px;
+  object-fit: cover;
+  border-radius: 3px;
 }
 
 #task-name {

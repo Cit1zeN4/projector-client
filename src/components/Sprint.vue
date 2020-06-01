@@ -1,12 +1,10 @@
 <template lang="pug">
   div
-    h1.mt-4 Tasks
-
-    b-button(v-b-modal.add-column-modal variant="outline-primary") Add column
-
-    #board.d-flex.align-items-start.mt-3(v-if="getCurrentProjectTasks")
-      #column.card.shadow.mr-4.mb-4(        
-        v-for="(column, index) in getTasks" 
+    h1.mt-4 {{'Sprint #' + number}}
+    b-button.mt-2(v-b-modal.add-column-modal variant="outline-primary") Add column
+    #board.d-flex.align-items-start.mt-3
+      #column.card.shadow.mr-4.mb-4(
+        v-for="(column, index) in getCurrentProjectTasks" 
         :key="index")
         
         h5.mb-4 {{column.name}}
@@ -22,6 +20,7 @@
             li#pointer.list-group-item.d-flex(
               class="justify-content-between  "
               v-for="(task, index) in column.tasks" :key="task.id"
+              v-if="task.sprint === Number(number)" 
               @click="selectTask(task)"
             ) 
               div#task-name {{task.taskName}}
@@ -36,6 +35,8 @@
         h4.mb-0.pr-4 {{selectedTask.taskName}}
         b-button(@click="openEdit()" variant="outline-primary") Edit
 
+      h4: b-badge(variant="primary") {{'Sprint ' + selectedTask.sprint}}
+
       .d-flex.align-items-center(v-if="selectedTask.startDate && selectedTask.endDate")
         div
           h6 Start date
@@ -46,6 +47,11 @@
 
       VueMarkdown.mt-2(:source="selectedTask.taskContent === null ? selectedTask.taskContent = 'Task Content' : selectedTask.taskContent")
 
+      p.mb-1 Owner:
+      .d-flex
+        b-img#small(:src="selectedTask.owner.photoLink") 
+        p.ml-2 {{selectedTask.owner.firstName}}
+      
       .d-flex.justify-content-center
         b-button(variant="outline-danger" @click="deleteTaskAction") Delete
 
@@ -150,9 +156,9 @@ import { mapGetters, mapActions } from "vuex";
 import VueMarkdown from "vue-markdown";
 
 export default {
-  name: "Sprint",
-  components: { draggable, VueMarkdown },
+  name: "ProjectTasks",
   props: ["number"],
+  components: { draggable, VueMarkdown },
   methods: {
     ...mapActions([
       "updateTask",
@@ -217,6 +223,8 @@ export default {
       this.newTask.taskColumnId = columnId;
     },
     submitAdd() {
+      this.newTask.ownerId = this.getUser.id;
+      console.log(this.newTask);
       this.addTask(this.newTask);
       this.newTask = {};
       this.$refs["add-task-modal"].hide();
@@ -227,28 +235,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getCurrentProjectTasks", "getCurrentProject"]),
-    getTasks: {
-      get() {
-        return this.getCurrentProjectTasks.map(column => {
-          const res = {
-            id: column.id,
-            name: column.name,
-            projectId: column.projectId,
-            tasks: []
-          };
-          res.tasks = column.tasks.filter(task => {
-            return task.sprint === Number(this.number);
-          });
-          return res;
-        });
-      }
-    }
+    ...mapGetters(["getCurrentProjectTasks", "getCurrentProject", "getUser"])
   },
   data() {
     return {
       ev: {},
-      selectedTask: {},
+      selectedTask: {
+        owner: {}
+      },
       newColumn: "",
       deletingColumn: {},
       newTask: {}
@@ -271,6 +265,13 @@ export default {
 
 #pointer {
   cursor: pointer;
+}
+
+#small {
+  height: 25px;
+  width: 25px;
+  object-fit: cover;
+  border-radius: 3px;
 }
 
 #task-name {
