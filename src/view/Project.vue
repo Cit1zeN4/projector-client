@@ -11,7 +11,8 @@
             b-nav-item.text-right(:to="`/projects/${id}/tasks`") Tasks
             b-nav-item.text-right(v-b-toggle.sprints-sidebar) Sprints
             b-collapse#sprints-sidebar
-              b-nav-item.pr-2.text-right Sprint #1
+              b-nav-item.pr-2.text-right(v-for="sprint in getSprintList()" 
+              :to="`/projects/${id}/sprint/${sprint}`") {{'Sprint #'+ sprint}}            
 
     .d-flex
       .left-sidebar.d-none.d-lg-flex.flex-column.p-4.shadow   
@@ -23,9 +24,9 @@
         b-button.mt-3(v-b-toggle.sprints variant="outline-primary") Sprints
         b-collapse#sprints
           b-list-group.mt-3
-            b-list-group-item Sprint #1
-            b-list-group-item Sprint #2
-            b-list-group-item Sprint #3
+            router-link.list-group-item(v-for="sprint in getSprintList()" 
+            :to="`/projects/${id}/sprint/${sprint}`") {{'Sprint #'+ sprint}}
+
       .content.p-4
         router-view
         
@@ -42,10 +43,21 @@ export default {
     NavBar
   },
   computed: {
-    ...mapGetters(["getCurrentProject"])
+    ...mapGetters(["getCurrentProject", "getCurrentProjectTasks"])
   },
   methods: {
-    ...mapActions(["fetchProjectById"])
+    ...mapActions(["fetchProjectById"]),
+    getSprintList() {
+      return this.getCurrentProjectTasks
+        .map(column => {
+          return column.tasks.map(t => t.sprint);
+        })
+        .flat()
+        .filter((value, index, self) => {
+          return self.indexOf(value) === index;
+        })
+        .sort((a, b) => a - b);
+    }
   },
   mounted() {
     this.fetchProjectById(this.id);

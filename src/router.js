@@ -62,6 +62,12 @@ const router = new Router({
           component: () => import("@/components/ProjectTasks"),
           meta: { title: "Tasks" },
         },
+        {
+          path: "sprint/:number",
+          component: () => import("@/components/Sprint"),
+          meta: { title: "Sprint" },
+          props: true,
+        },
       ],
     },
   ],
