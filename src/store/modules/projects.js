@@ -57,6 +57,22 @@ export default {
           });
       });
     },
+    updateProjectById(ctx, data) {
+      fetch(`http://${process.env.VUE_APP_API_HOST}/api/project/${data.id}`, {
+        method: "PUT",
+        credentials: "include",
+        mode: "cors",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(data.form),
+      }).then((res) => {
+        if (!res.ok)
+          res.json().then((error) => {
+            ctx.dispatch("throwError", error);
+          });
+      });
+    },
     fetchManagerById(ctx, managerId) {
       fetch(`http://${process.env.VUE_APP_API_HOST}/api/users/${managerId}`, {
         method: "GET",

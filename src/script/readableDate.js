@@ -1,4 +1,8 @@
 export default (isoDate) => {
   const date = new Date(isoDate);
-  return `${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`;
+  return date.toLocaleString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 };
