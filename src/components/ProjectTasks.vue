@@ -2,7 +2,8 @@
   div
     h1.mt-4 Tasks
 
-    b-button(v-b-modal.add-column-modal variant="outline-primary") Add column
+    b-button(v-b-modal.add-column-modal variant="outline-primary" 
+      v-if="checkRole(getUserRole, 'admin', 'manager')") Add column
 
     #board.d-flex.align-items-start.mt-3
       #column.card.shadow.mr-4.mb-4(
@@ -28,8 +29,11 @@
               div
                 b-badge(v-if="task.sprint" variant="primary" pill) {{task.sprint}}
         .d-flex.mt-4
-          b-button.flex-1.mr-1(v-b-modal.add-task-modal variant="outline-primary" @click.prevent="preopenModal(column.id)"): b-icon-plus-square
-          b-button.flex-1(variant="outline-danger" @click="openDelColumnModal(column)"): b-icon-trash
+          b-button.flex-1.mr-1(v-b-modal.add-task-modal variant="outline-primary" 
+            @click.prevent="preopenModal(column.id)" v-if="checkRole(getUserRole, 'admin', 'manager')"): b-icon-plus-square
+            
+          b-button.flex-1(variant="outline-danger" @click="openDelColumnModal(column)"
+            v-if="checkRole(getUserRole, 'admin', 'manager')"): b-icon-trash
 
     b-modal#task-modal(ref="task-modal" :title="selectedTask.taskName" hide-footer)
       .d-flex.w-100.align-items-center.justify-content-between(slot="modal-header")
@@ -179,6 +183,9 @@ export default {
       "addTask",
       "deleteTask"
     ]),
+    checkRole(role, ...accessRole) {
+      return accessRole.some(r => r === role);
+    },
     addEvLog(data) {
       this.ev.column = this.getCurrentProjectTasks.find(
         item => item.name === data.path[2].children[0].innerText
@@ -256,7 +263,8 @@ export default {
       "getCurrentProject",
       "getCurrentProjectUsers",
       "getCurrentProjectUsersSelect",
-      "getUser"
+      "getUser",
+      "getUserRole"
     ])
   },
   data() {

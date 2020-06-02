@@ -13,6 +13,8 @@ export default {
         if (res.ok)
           res.json().then((body) => {
             console.log(body);
+            if (data.form.user.id)
+              ctx.dispatch("fetchUserTasks", data.form.user.id);
           });
         else
           res.json().then((error) => {

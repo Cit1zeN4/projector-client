@@ -16,17 +16,23 @@
             | {{getEmail}}
 
       h3.mt-4 Projects
-      b-row
-        b-col
-        b-col
-        b-col
+      
+      b-card-group.my-4
+        .card.shadow.mx-2(
+          v-for="(project, index) in getUserProjects" 
+          :key="index"
+        )
+          p#task-name.m-4 {{project.projectName}}
 
       h3.mt-4 Last tasks
-      b-row
-        b-col
-        b-col
-        b-col
-        
+      
+      b-card-group.my-4
+        .card.shadow.mx-2(
+          v-for="(task, index) in getUserTasks" 
+          :key="index"
+        )
+          p#task-name.m-4 {{task.taskName}}
+
       b-row
         b-col.d-flex.justify-content-end
           b-button.mb-3.mr-2(variant="outline-primary" @click="openEdit") Edit
@@ -44,10 +50,17 @@ import NoAuth from "../components/NoAuth.vue";
 export default {
   name: "Profile",
   computed: {
-    ...mapGetters(["userFullName", "getImage", "getEmail", "isUserAuth"])
+    ...mapGetters([
+      "userFullName",
+      "getImage",
+      "getEmail",
+      "isUserAuth",
+      "getUserTasks",
+      "getUserProjects"
+    ])
   },
   methods: {
-    ...mapActions(["logout"]),
+    ...mapActions(["logout", "fetchUserTasks"]),
     logoutAction() {
       this.logout(this.$router);
     },
@@ -67,5 +80,19 @@ export default {
   object-fit: cover;
   width: 250px;
   height: 250px;
+}
+
+.card {
+  max-width: 300px;
+}
+
+#task-name {
+  max-width: 210px;
+  max-height: 50px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 </style>
