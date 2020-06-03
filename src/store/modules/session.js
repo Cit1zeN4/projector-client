@@ -14,8 +14,6 @@ export default {
           if (res.ok) {
             res.json().then((body) => {
               ctx.commit("updateUser", body);
-              ctx.dispatch("fetchUserTasks", body.user.id);
-              ctx.dispatch("fetchUserProjects", body.user.id);
               if (data.redirect) data.redirect.push("/");
             });
             setTimeout(() => {
@@ -45,8 +43,6 @@ export default {
             res.json().then((body) => {
               console.log(body);
               ctx.commit("updateUser", body);
-              ctx.dispatch("fetchUserTasks", body.user.id);
-              ctx.dispatch("fetchUserProjects", body.user.id);
               if (data.redirect) data.redirect.push("/");
             });
             setTimeout(() => {
@@ -70,8 +66,6 @@ export default {
         if (res.ok) {
           res.json().then((body) => {
             ctx.commit("updateUser", body);
-            ctx.dispatch("fetchUserTasks", body.user.id);
-            ctx.dispatch("fetchUserProjects", body.user.id);
           });
           setTimeout(() => {
             ctx.dispatch("auth");

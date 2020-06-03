@@ -10,7 +10,7 @@
           span Create
       
       b-card-group.my-4(v-if="getAllProjects.length !== 0")
-        b-card.shadow.mx-2(
+        b-card.shadow.mx-2.mt-3(
           :title="item.projectName" 
           v-for="(item, index) in this.getAllProjects" 
           :key="index"
@@ -60,6 +60,7 @@ export default {
 <style scoped>
 .card {
   cursor: pointer;
+  min-width: 270px;
 }
 
 #no-projects {

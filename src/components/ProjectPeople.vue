@@ -1,7 +1,7 @@
 <template lang="pug">
   div
     h1.mt-4 People
-    b-button.mt-3( v-b-modal.add-user-modal variant="primary"
+    b-button.mt-3( v-b-modal.add-user-modal variant="outline-primary"
     v-if="checkRole(getUserRole, 'admin', 'manager')")
       div
         b-icon-plus-square.mr-2

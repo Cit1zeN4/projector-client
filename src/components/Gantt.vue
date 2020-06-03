@@ -15,7 +15,6 @@ export default {
   computed: {
     ...mapGetters(["getCurrentProjectTasks"]),
     parsed: function() {
-      //let counter = 1;
       const rows = {};
       const items = {};
       if (this.getCurrentProjectTasks)
@@ -37,7 +36,6 @@ export default {
                   end: new Date(task.endDate).getTime()
                 }
               };
-              //counter++;
             }
           });
         });
@@ -45,7 +43,8 @@ export default {
     },
     isLoaded: function() {
       let result = false;
-      if (this.getCurrentProjectTasks.length) result = true;
+      if (this.getCurrentProjectTasks.some(t => t.tasks.length > 0))
+        result = true;
       return result;
     },
     config: function() {
@@ -96,3 +95,8 @@ export default {
 };
 </script>
 
+<style>
+.gantt-schedule-timeline-calendar__list-toggle {
+  display: none;
+}
+</style>

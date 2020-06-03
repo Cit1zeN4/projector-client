@@ -15,9 +15,11 @@ export default {
             ctx.commit("addProject", body.project);
           });
         else {
-          res.json().then((error) => {
-            ctx.dispatch("throwError", error);
-          });
+          if (res.status === 423) ctx.commit("setAccessError");
+          else
+            res.json().then((error) => {
+              ctx.dispatch("throwError", error);
+            });
         }
       });
     },
@@ -32,6 +34,7 @@ export default {
           res.json().then((body) => {
             ctx.commit("addProject", body);
           });
+        else if (res.status === 423) ctx.commit("setAccessError");
         else
           res.json().then((error) => {
             ctx.dispatch("throwError", error);
@@ -51,6 +54,7 @@ export default {
             ctx.dispatch("fetchProjectUsers", body.id);
             ctx.dispatch("fetchCurrentProjectTasks", body.id);
           });
+        else if (res.status === 423) ctx.commit("setAccessError");
         else
           res.json().then((error) => {
             ctx.dispatch("throwError", error);
@@ -69,6 +73,7 @@ export default {
       }).then((res) => {
         if (!res.ok)
           res.json().then((error) => {
+            ctx.commit("setAccessError");
             ctx.dispatch("throwError", error);
           });
       });

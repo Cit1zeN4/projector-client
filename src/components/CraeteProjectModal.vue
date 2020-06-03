@@ -24,6 +24,7 @@
         label-for="input-3"
       )
         b-form-datepicker#input-3(
+          required
           v-model="form.dueDate"
         )
 
@@ -38,11 +39,11 @@ export default {
   methods: {
     ...mapActions(["createProject"]),
     createNewProject() {
-      console.log(this.form);
       this.createProject({ form: this.form });
       this.$bvModal.hide("create-project-modal");
       this.form.projectName = "";
       this.form.projectDescription = "";
+      this.form.dueDate = null;
     }
   },
   computed: {

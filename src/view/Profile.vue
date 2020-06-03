@@ -15,24 +15,6 @@
             class="text-md-left mt-md-0")
             | {{getEmail}}
 
-      h3.mt-4 Projects
-      
-      b-card-group.my-4
-        .card.shadow.mx-2(
-          v-for="(project, index) in getUserProjects" 
-          :key="index"
-        )
-          p#task-name.m-4 {{project.projectName}}
-
-      h3.mt-4 Last tasks
-      
-      b-card-group.my-4
-        .card.shadow.mx-2(
-          v-for="(task, index) in getUserTasks" 
-          :key="index"
-        )
-          p#task-name.m-4 {{task.taskName}}
-
       b-row
         b-col.d-flex.justify-content-end
           b-button.mb-3.mr-2(variant="outline-primary" @click="openEdit") Edit
@@ -50,17 +32,10 @@ import NoAuth from "../components/NoAuth.vue";
 export default {
   name: "Profile",
   computed: {
-    ...mapGetters([
-      "userFullName",
-      "getImage",
-      "getEmail",
-      "isUserAuth",
-      "getUserTasks",
-      "getUserProjects"
-    ])
+    ...mapGetters(["userFullName", "getImage", "getEmail", "isUserAuth"])
   },
   methods: {
-    ...mapActions(["logout", "fetchUserTasks"]),
+    ...mapActions(["logout"]),
     logoutAction() {
       this.logout(this.$router);
     },

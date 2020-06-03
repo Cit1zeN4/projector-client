@@ -35,15 +35,25 @@ export default new Vuex.Store({
       state.name = "";
       state.message = "";
     },
+    setAccessError(state) {
+      state.accessError = true;
+    },
+    clearAccessError(state) {
+      state.accessError = false;
+    },
   },
   state: {
     error: false,
     name: "",
     message: "",
+    accessError: false,
   },
   getters: {
     getError(state) {
       return state;
+    },
+    getAccessError(state) {
+      return state.accessError;
     },
   },
   modules: { session, projects, users, tasks },

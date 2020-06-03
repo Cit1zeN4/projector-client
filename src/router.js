@@ -48,11 +48,6 @@ const router = new Router({
           meta: { title: "Project" },
         },
         {
-          path: "files",
-          component: () => import("@/components/ProjectFiles"),
-          meta: { title: "Files" },
-        },
-        {
           path: "people",
           component: () => import("@/components/ProjectPeople"),
           meta: { title: "People" },
@@ -69,6 +64,11 @@ const router = new Router({
           props: true,
         },
       ],
+    },
+    {
+      path: "/admin",
+      component: () => import("@/view/Admin.vue"),
+      meta: { title: "Admin page" },
     },
   ],
 });
