@@ -4,11 +4,6 @@
     #lab.d-flex.flex-column.align-items-center.mt-5
       h1.mt-5 Projector
       p Make your projects better
-    #gh.d-flex.position-absolute.justify-content-center
-      a#pointer.card.mb-2(href="https://github.com/Cit1zeN4/projector-server")
-        .d-flex.align-items-center.mx-2
-          img#s50.mr-1.mt-1.mb-1(:src="publicPath('img/github-logo.png')")
-          h4.mb-0 GitHub
 </template>
 
 <script>

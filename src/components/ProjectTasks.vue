@@ -30,7 +30,7 @@
                 b-badge(v-if="task.sprint" variant="primary" pill) {{task.sprint}}
         .d-flex.mt-4
           b-button.flex-1.mr-1(v-b-modal.add-task-modal variant="outline-primary" 
-            @click.prevent="preopenModal(column.id)" v-if="checkRole(getUserRole, 'admin', 'manager')"): b-icon-plus-square
+            @click.prevent="preopenModal(column.id)"): b-icon-plus-square
             
           b-button.flex-1(variant="outline-danger" @click="openDelColumnModal(column)"
             v-if="checkRole(getUserRole, 'admin', 'manager')"): b-icon-trash

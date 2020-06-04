@@ -24,7 +24,7 @@
             img.rounded(:src="defaultImg(user.photoLink)")
           div.d-flex.justify-content-between.w-100.pl-4
             div
-              h3.my-0 {{userFullName(user)}}
+              h4.my-0 {{userFullName(user)}}
               p.my-0 {{user.user_project.role}}
             div(v-if="checkRole(getUserRole, 'admin', 'manager')")
               b-dropdown(size="lg"  variant="link" toggle-class="text-decoration-none" no-caret)

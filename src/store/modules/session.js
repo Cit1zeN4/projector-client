@@ -66,10 +66,10 @@ export default {
         if (res.ok) {
           res.json().then((body) => {
             ctx.commit("updateUser", body);
+            setTimeout(() => {
+              ctx.dispatch("auth");
+            }, 720000);
           });
-          setTimeout(() => {
-            ctx.dispatch("auth");
-          }, ctx.state.accessTokenExpireIn - 120000);
         } else {
           res.json().then((error) => {
             ctx.dispatch("throwError", error);
