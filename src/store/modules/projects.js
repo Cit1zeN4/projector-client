@@ -159,7 +159,7 @@ export default {
       ).then((res) => {
         if (res.ok)
           res.json().then((body) => {
-            ctx.commit("deleteUserFromProject", body);
+            ctx.commit("deleteUserFromProject", body.userId);
           });
         else
           res.json().then((error) => {
@@ -311,11 +311,14 @@ export default {
       else state.currentProjectUsers.push(user);
     },
     deleteUserFromProject(state, userId) {
+      console.log(state.currentProjectUsers);
+      console.log(userId);
       const removeIndex = state.currentProjectUsers
         .map(function(item) {
           return item.id;
         })
-        .indexOf(userId);
+        .indexOf(Number(userId));
+      console.log(removeIndex);
       state.currentProjectUsers.splice(removeIndex, 1);
     },
     updateUserRole(state, data) {

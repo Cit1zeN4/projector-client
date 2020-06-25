@@ -1,51 +1,52 @@
 <template lang="pug">
   div
-    h1.mt-4 People
-    b-button.mt-3( v-b-modal.add-user-modal variant="outline-primary"
-    v-if="checkRole(getUserRole, 'admin', 'manager')")
-      div
-        b-icon-plus-square.mr-2
-        span Add
-    
-    h4.mt-4 Project Manager    
-    b-list-group.mt-4
-      b-list-group-item
-        .d-flex
-          div 
-            img.rounded(:src="this.getCurrentProjectManager.photoLink")
-          div.w-100.px-4
-            h3.my-0 {{userFullName(this.getCurrentProjectManager)}}
-            p.my-0 PM
-    h4.mt-4 Users   
-    b-list-group.mt-4
-      b-list-group-item(v-for="(user, index) in this.getCurrentProjectUsers" :key="index")
-        .d-flex
-          div 
-            img.rounded(:src="defaultImg(user.photoLink)")
-          div.d-flex.justify-content-between.w-100.pl-4
-            div
-              h4.my-0 {{userFullName(user)}}
-              p.my-0 {{user.user_project.role}}
-            div(v-if="checkRole(getUserRole, 'admin', 'manager')")
-              b-dropdown(size="lg"  variant="link" toggle-class="text-decoration-none" no-caret)
-                template(v-slot:button-content)
-                  h6: b-icon-three-dots-vertical(variant="dark")
-                b-dropdown-item(v-b-modal.update-user-model @click.prevent="getUser(user)") Edit project role
-                b-dropdown-item(v-b-modal.delete-user-model @click.prevent="getUser(user)") Delete user
+    div(if="!getAccessError")
+      h1.mt-4 People
+      b-button.mt-3( v-b-modal.add-user-modal variant="outline-primary"
+      v-if="checkRole(getUserRole, 'admin', 'manager')")
+        div
+          b-icon-plus-square.mr-2
+          span Add
+      
+      h4.mt-4 Project Manager    
+      b-list-group.mt-4
+        b-list-group-item
+          .d-flex
+            div 
+              img.rounded(:src="this.getCurrentProjectManager.photoLink")
+            div.w-100.px-4
+              h3.my-0 {{userFullName(this.getCurrentProjectManager)}}
+              p.my-0 PM
+      h4.mt-4 Users   
+      b-list-group.mt-4
+        b-list-group-item(v-for="(user, index) in this.getCurrentProjectUsers" :key="index")
+          .d-flex
+            div 
+              img.rounded(:src="defaultImg(user.photoLink)")
+            div.d-flex.justify-content-between.w-100.pl-4
+              div
+                h4.my-0 {{userFullName(user)}}
+                p.my-0 {{user.user_project.role}}
+              div(v-if="checkRole(getUserRole, 'admin', 'manager')")
+                b-dropdown(size="lg"  variant="link" toggle-class="text-decoration-none" no-caret)
+                  template(v-slot:button-content)
+                    h6: b-icon-three-dots-vertical(variant="dark")
+                  b-dropdown-item(v-b-modal.update-user-model @click.prevent="getUser(user)") Edit project role
+                  b-dropdown-item(v-b-modal.delete-user-model @click.prevent="getUser(user)") Delete user
 
-    AddUserModal/
+      AddUserModal/
 
-    b-modal#delete-user-model(v-if="loaded" ref="delete-user-model" 
-      title="Deleting user" hide-footer @hide="clearUserForAction()")
-      p Are you sure that you want to delete {{userForAction.firstName}} from project? 
-      .d-flex.justify-content-center
-        b-button(variant="danger" @click="deleteUser()") Delete 
+      b-modal#delete-user-model(v-if="loaded" ref="delete-user-model" 
+        title="Deleting user" hide-footer @hide="clearUserForAction()")
+        p Are you sure that you want to delete {{userForAction.firstName}} from project? 
+        .d-flex.justify-content-center
+          b-button(variant="danger" @click="deleteUser()") Delete 
 
-    b-modal#update-user-model(v-if="loaded" ref="update-user-model" title="Update user" hide-footer)
-      b-form(@submit.prevent="updateUserRole()")
-        b-form-input(v-model="role")
-        .d-flex.justify-content-center.mt-3 
-          b-button(type="submit" variant="primary") Update
+      b-modal#update-user-model(v-if="loaded" ref="update-user-model" title="Update user" hide-footer)
+        b-form(@submit.prevent="updateUserRole()")
+          b-form-input(v-model="role")
+          .d-flex.justify-content-center.mt-3 
+            b-button(type="submit" variant="primary") Update
 
 </template>
 
@@ -63,7 +64,8 @@ export default {
       "getCurrentProject",
       "getCurrentProjectManager",
       "getCurrentProjectUsers",
-      "getUserRole"
+      "getUserRole",
+      "getUser"
     ])
   },
   methods: {
@@ -99,6 +101,7 @@ export default {
       );
     },
     deleteUser() {
+      console.log(this.userForAction);
       this.deleteProjectUser({
         projectId: this.getCurrentProject.id,
         userId: this.userForAction.id

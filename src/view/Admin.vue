@@ -1,7 +1,11 @@
 <template lang="pug">
   div    
     NavBar
-    AdminUsers.m-4
+    div(v-if="checkRole(getUserRole, 'admin')")
+      AdminUsers.m-4
+    div(v-else)
+      .d-flex.justify-content-center.align-items-center.h-100vh
+        h1 Access error
 </template>
 
 <script>
@@ -13,13 +17,22 @@ export default {
   name: "Admin",
   components: { NavBar, AdminUsers },
   computed: {
-    ...mapGetters(["getUsers"])
+    ...mapGetters(["getUsers", "getUserRole"])
   },
   methods: {
-    ...mapActions(["fetchUsers"])
+    ...mapActions(["fetchUsers"]),
+    checkRole(role, ...accessRole) {
+      return accessRole.some(r => r === role);
+    }
   },
   mounted() {
     this.fetchUsers();
   }
 };
 </script>
+
+<style scoped>
+.h-100vh {
+  height: calc(100vh - 56px);
+}
+</style>
