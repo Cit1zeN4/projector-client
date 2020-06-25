@@ -3,7 +3,6 @@
     h1 User
 
     b-button.mb-3.mt-1(v-b-modal.create-user variant="primary") Create user
-
     b-list-group
       b-list-group-item(v-for="(user, index) in getUsers" :key="index" v-if="user.role")
         .d-flex
@@ -14,7 +13,7 @@
               h4.my-0 {{userFullName(user)}}
               p.my-0(v-if="user.role") {{user.role.roleName}}
             div     
-              b-dropdown(v-if="user.id !== getUserId" size="lg"  variant="link" toggle-class="text-decoration-none" no-caret)
+              b-dropdown(v-if="user.id !== getUserId" size="lg" right variant="link" toggle-class="text-decoration-none" no-caret)
                 template(v-slot:button-content)
                   h6: b-icon-three-dots-vertical(variant="dark")
                 b-dropdown-item(v-b-modal.edit-role @click.prevent="getUser(user)") Change user role

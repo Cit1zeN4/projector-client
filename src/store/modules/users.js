@@ -106,7 +106,7 @@ export default {
   },
   mutations: {
     addUser(state, data) {
-      console.log(data);
+      if (!data.role) data.role = state.roles.find((o) => o.id === data.roleId);
       if (data instanceof Array) state.users.push(...data);
       else state.users.push(data);
     },
